@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fullscreen Terminal Top Input</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: black;
+    font-family: monospace;
+    color: #02f50f;
+    transition: background 0.5s;
+  }
+
+  .terminal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .output {
+    flex: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+  }
+
+  .input-line {
+    display: flex;
+    align-items: center;
+  }
+
+  .prompt {
+    margin-right: 5px;
+  }
+
+  #commandBox {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #02f50f;
+    font-family: monospace;
+    font-size: 16px;
+  }
+
+  #commandBox::placeholder {
+    color: #02f50faa;
+  }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="output" id="output">Welcome! Type "help" for commands.</div>
+  <div class="input-line">
+    <span class="prompt">user/$></span>
+    <input type="text" id="commandBox" placeholder="Type command...">
+  </div>
+</div>
+
+<!-- Admin sound -->
+<audio id="adminSound" src="scare.mp3" loop></audio>
+
+<script>
+const output = document.getElementById('output');
+const input = document.getElementById('commandBox');
+const adminSound = document.getElementById('adminSound');
+
+const commands = { 
+  help: 'Available commands: google, !browser, !ai, !gms, !admin (Admins only), version',
+  google: 'Opening Google...',
+  version: 'version 2.5',
+  '!browser': 'Opening browser page...',
+  '!gms': 'Opening games...',
+  '!xploits': 'Opening xploits...',
+  '!apps': 'Opening games...',
+  '!ai': 'opening AI......',
+  '!admin': 'DONT LOOK BEHIND YOU!!!!!!!!!!!!'
+};
+
+const redirects = {
+  google: 'https://www.google.com',
+  devbytes: 'https://www.devbytes.ai',
+  '!browser': 'https://test3883443334343.vercel.app',
+  '!gms': 'g2.html',
+  '!ai': '/ai/index.html',
+  '!xploits': '/xploits/index.html',
+};
+
+input.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const cmd = input.value.trim().toLowerCase();
+    input.value = '';
+
+    output.textContent += `> ${cmd}\n`;
+
+    if (commands[cmd]) {
+      output.textContent += commands[cmd] + '\n';
+
+      if (cmd === '!admin') {
+        // Change background and play music
+        document.body.style.backgroundImage = 'url("scare.png")';
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        adminSound.volume = 0.7;
+        adminSound.play().catch(()=>{});
+      }
+
+      if (redirects[cmd] && cmd !== '!admin') {
+        window.location.href = redirects[cmd];
+      }
+    } else {
+      output.textContent += 'Invalid command!\n';
+    }
+
+    output.scrollTop = output.scrollHeight;
+  }
+});
+</script>
+</body>
+</html>
